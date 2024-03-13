@@ -12,6 +12,7 @@ public class Products {
         this.price = price;
         this.discount = discount;
     }
+
     public Integer getId() {
         return id;
     }

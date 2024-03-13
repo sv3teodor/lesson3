@@ -23,7 +23,7 @@ public class ProductTest extends BaseTest {
     @Test
     @DisplayName("Add a new product")
     public void addNewProduct() {
-        Products products = new Products(faker.elderScrolls().city(),faker.elderScrolls().race(),
+        Products products = new Products(faker.elderScrolls().city(), faker.elderScrolls().race(),
                 faker.random().nextDouble(), (double) faker.random().nextLong(100));
         RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -38,7 +38,7 @@ public class ProductTest extends BaseTest {
     public void getInfoProduct() {
         RestAssured.given()
                 .contentType(ContentType.JSON)
-                .get(ApiRequests.PRODUCTS+"/"+getProductList()[0].getId())
+                .get(ApiRequests.PRODUCTS + "/" + getProductList()[0].getId())
                 .then()
                 .statusCode(SC_OK);
     }
@@ -46,13 +46,13 @@ public class ProductTest extends BaseTest {
     @Test
     @DisplayName("Update information about product")
     public void updateInformationProduct() {
-        Products products= getProductList()[0];
+        Products products = getProductList()[0];
         products.setName(faker.animal().name());
         products.setPrice((double) faker.random().nextInt(5000));
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(products)
-                .put(ApiRequests.PRODUCTS+"/"+products.getId())
+                .put(ApiRequests.PRODUCTS + "/" + products.getId())
                 .then()
                 .statusCode(SC_OK);
     }
@@ -62,7 +62,7 @@ public class ProductTest extends BaseTest {
     public void deleteProduct() {
         RestAssured.given()
                 .contentType(ContentType.JSON)
-                .delete(ApiRequests.PRODUCTS+"/"+getProductList()[0].getId())
+                .delete(ApiRequests.PRODUCTS + "/" + getProductList()[0].getId())
                 .then()
                 .statusCode(SC_OK);
     }

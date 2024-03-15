@@ -1,12 +1,20 @@
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Products {
     private Integer id;
     private String name;
     private String category;
     private Double price;
     private Double discount;
+    private Integer quantity;
 
-
-    public Products(String name, String category, Double price, Double discount) {
+}
+/*
+    public Products(Integer id, String name, String category, Double price, Double discount) {
+        this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
@@ -52,5 +60,4 @@ public class Products {
     public void setDiscount(Double discount) {
         this.discount = discount;
     }
-}
-
+} */

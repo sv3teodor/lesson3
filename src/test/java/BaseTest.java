@@ -14,19 +14,20 @@ public abstract class BaseTest {
     private static final String BASE_URI = "http://9b142cdd34e.vps.myjino.ru:49268";
     protected static Faker faker;
     protected static ObjectMapper objectMapper;
-    protected  String userToken;
+    protected String userToken;
+
     @BeforeAll
     public static void setUp() {
         faker = new Faker(Locale.US);
         RestAssured.baseURI = BASE_URI;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,true);
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
 
     }
 
     protected String getToken() {
-        UserProfile userProfile = new UserProfile(faker.name().firstName(), faker.internet().password());
+        UserProfile userProfile = new UserProfile(faker.name().firstName() + faker.random().nextInt(1000), faker.internet().password());
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(userProfile)
@@ -48,15 +49,16 @@ public abstract class BaseTest {
     }
 
     protected Response addProductToCart() {
-        return addProductToCart(getProductList()[0],1);
+        return addProductToCart(getProductList()[0], 1);
     }
+
     protected Response addProductToCart(Products products, int quantity) {
-        userToken=getToken();
+        userToken = getToken();
         return RestAssured.given()
                 .auth().oauth2(userToken)
                 .contentType(ContentType.JSON)
                 .body(getProductList()[0])
-                .body("{\"product_id\":" + products.getId() + ",\"quantity\":"+quantity+"}")
+                .body("{\"product_id\":" + products.getId() + ",\"quantity\":" + quantity + "}")
                 .post(ApiRequests.CART)
                 .thenReturn();
     }

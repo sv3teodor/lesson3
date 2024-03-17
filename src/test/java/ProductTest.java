@@ -25,8 +25,9 @@ public class ProductTest extends BaseTest {
     @Test
     @DisplayName("Add a new product")
     public void addNewProductPositiveTest() {
-        Products products = new Products(0,faker.elderScrolls().city(),faker.elderScrolls().city(),
-                faker.random().nextDouble(),faker.random().nextDouble(),faker.random().nextInt(10));
+        //Баг. Запрос не поддерживается сервером
+        Products products = new Products(0, faker.elderScrolls().city(), faker.elderScrolls().city(),
+                faker.random().nextDouble(), faker.random().nextDouble(), faker.random().nextInt(10));
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(products)
@@ -47,13 +48,13 @@ public class ProductTest extends BaseTest {
                 .statusCode(SC_NOT_FOUND)
                 .extract()
                 .body()
-                .asString(),Products.class);
+                .asString(), Products.class);
     }
-
 
     @Test
     @DisplayName("Update information about product")
     public void updateInformationProductPositiveTest() {
+        //Баг. Запрос не поддерживается сервером
         Products products = getProductList()[0];
         products.setName(faker.animal().name());
         products.setPrice((double) faker.random().nextInt(5000));
@@ -69,6 +70,7 @@ public class ProductTest extends BaseTest {
     @Test
     @DisplayName("Update information about product. Negative test")
     public void updateInformationProductNegativeTest() {
+        //Баг. Запрос не поддерживается сервером
         Products products = getProductList()[0];
         products.setName(faker.animal().name());
         products.setPrice((double) faker.random().nextInt(5000));
@@ -84,6 +86,7 @@ public class ProductTest extends BaseTest {
     @Test
     @DisplayName("Delete product. Positive test")
     public void deleteProductPositiveTest() {
+        //Баг. Запрос не поддерживается сервером
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .delete(ApiRequests.PRODUCTS + "/" + getProductList()[0].getId())
@@ -91,9 +94,11 @@ public class ProductTest extends BaseTest {
                 .statusCode(SC_OK)
                 .body("messages", Matchers.equalTo("Product deleted successfully"));
     }
+
     @Test
     @DisplayName("Delete product. Negative test")
     public void deleteProductNegativeTest() {
+        //Баг. Запрос не поддерживается сервером
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .delete(ApiRequests.PRODUCTS + "/" + getProductList()[0].getId())

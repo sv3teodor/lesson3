@@ -1,8 +1,6 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-
-import jdk.jfr.Description;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,21 +20,21 @@ public class CartTest extends BaseTest {
                 .get(ApiRequests.CART)
                 .then()
                 .statusCode(SC_OK)
-                .extract().asString(),Cart.class);
+                .extract().asString(), Cart.class);
     }
 
     @Test
     @DisplayName("Get cart negative")
     public void getCartNegativeTest() {
         //Запрос корзины пользователя в которую не добавлен товар
-        userToken=getToken();
+        userToken = getToken();
         RestAssured.given()
                 .auth().oauth2(userToken)
                 .contentType(ContentType.JSON)
                 .get(ApiRequests.CART)
                 .then()
                 .statusCode(SC_NOT_FOUND)
-                .body("message",Matchers.equalTo("Cart not found"));
+                .body("message", Matchers.equalTo("Cart not found"));
     }
 
     @Test
@@ -45,18 +43,18 @@ public class CartTest extends BaseTest {
         addProductToCart()
                 .then()
                 .statusCode(SC_CREATED)
-                .body("message",Matchers.equalTo("Product added to cart successfully"));
+                .body("message", Matchers.equalTo("Product added to cart successfully"));
     }
 
     @Test
     @DisplayName("Add products to cart negative test")
     public void addItemToCartNegativeTest() {
         //Пробуем добавить продукт с несуществующим ID
-        Products products = new Products(0,"fake","fake",0D,0D,0);
-        addProductToCart(products,1)
+        Products products = new Products(0, "fake", "fake", 0D, 0D, 0);
+        addProductToCart(products, 1)
                 .then()
                 .statusCode(SC_NOT_FOUND)
-                .body("message",Matchers.equalTo( "Product not found"));
+                .body("message", Matchers.equalTo("Product not found"));
     }
 
     @Test
@@ -64,30 +62,30 @@ public class CartTest extends BaseTest {
     public void removeProductFromCartPositiveTest() {
         //Тут баг. Сообщение в ответе не соответствует описанию
         Products products = getProductList()[0];
-        addProductToCart(products,1);
+        addProductToCart(products, 1);
         RestAssured.given()
                 .auth().oauth2(userToken)
                 .contentType(ContentType.JSON)
-                .delete(ApiRequests.CART + "/" +products.getId() )
+                .delete(ApiRequests.CART + "/" + products.getId())
                 .then()
                 .statusCode(SC_OK)
-                .body("messages",Matchers.equalTo("Product removed from cart successfully"));
+                .body("messages", Matchers.equalTo("Product removed from cart successfully"));
     }
 
     @Test
-    @DisplayName("Remove product positive negative test")
+    @DisplayName("Remove product negative test")
     public void removeProductFromCartNegativeTest() {
         //Пробуем удалить продукт с несуществующим ID
         //Тут баг. Сообщение в ответе не соответствует описанию
         Products products = getProductList()[0];
-        addProductToCart(products,1);
+        addProductToCart(products, 1);
         RestAssured.given()
                 .auth().oauth2(userToken)
                 .contentType(ContentType.JSON)
-                .delete(ApiRequests.CART + "/" +products.getId()+1 )
+                .delete(ApiRequests.CART + "/" + products.getId() + 1)
                 .then()
                 .statusCode(SC_NOT_FOUND)
-                .body("message",Matchers.equalTo( "Product not found"));
+                .body("message", Matchers.equalTo("Product not found"));
     }
 
 }

@@ -23,7 +23,7 @@ public class UserTests extends BaseTest {
     @Test
     @DisplayName("Login user test")
     public void loginUser() {
-        UserProfile userProfile = new UserProfile(faker.name().firstName(), faker.internet().password());
+        UserProfile userProfile = new UserProfile(faker.name().firstName() + faker.random().nextInt(1000), faker.internet().password());
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(userProfile)
@@ -38,9 +38,6 @@ public class UserTests extends BaseTest {
                 .then()
                 .statusCode(SC_OK);
     }
-
-
-
 }
 
 

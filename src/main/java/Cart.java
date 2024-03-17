@@ -1,8 +1,5 @@
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonKey;
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -13,6 +10,4 @@ public class Cart {
     private float totalDiscount;
     @JsonAlias({"total_price"})
     private float totalPrice;
-
-    private float dddd;
 }

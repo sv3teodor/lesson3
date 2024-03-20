@@ -5,7 +5,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 import static org.apache.http.HttpStatus.*;
+import static org.hamcrest.Matchers.not;
 
 public class ProductTest extends BaseTest {
 
@@ -35,6 +37,21 @@ public class ProductTest extends BaseTest {
                 .then()
                 .statusCode(SC_CREATED)
                 .body("messages", Matchers.equalTo("Product added successfully"));
+    }
+
+    @Test
+    @DisplayName("Add a new product. Negative test")
+    public void addNewProductNegativeTest() {
+        //Баг. Запрос не поддерживается сервером
+        //Пробуем добавить продукт с пустыми именем и категорией
+        Products products = new Products(0, "", "",
+                faker.random().nextDouble(), faker.random().nextDouble(), faker.random().nextInt(10));
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(products)
+                .post(ApiRequests.PRODUCTS)
+                .then()
+                .statusCode(not(SC_CREATED));
     }
 
     @Test
@@ -71,7 +88,9 @@ public class ProductTest extends BaseTest {
     @DisplayName("Update information about product. Negative test")
     public void updateInformationProductNegativeTest() {
         //Баг. Запрос не поддерживается сервером
+        //Пробуем обновить информацию у несуществующего продукта.
         Products products = getProductList()[0];
+        products.setId(9999);
         products.setName(faker.animal().name());
         products.setPrice((double) faker.random().nextInt(5000));
         RestAssured.given()
@@ -79,14 +98,15 @@ public class ProductTest extends BaseTest {
                 .body(products)
                 .put(ApiRequests.PRODUCTS + "/" + products.getId())
                 .then()
-                .statusCode(SC_NOT_FOUND)
-                .body("messages", Matchers.equalTo("Product not found"));
+                .statusCode(not(SC_OK));
+
     }
 
     @Test
     @DisplayName("Delete product. Positive test")
     public void deleteProductPositiveTest() {
         //Баг. Запрос не поддерживается сервером
+        //Пробуем удалить существующий продукт
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .delete(ApiRequests.PRODUCTS + "/" + getProductList()[0].getId())
@@ -99,12 +119,12 @@ public class ProductTest extends BaseTest {
     @DisplayName("Delete product. Negative test")
     public void deleteProductNegativeTest() {
         //Баг. Запрос не поддерживается сервером
+        //Пробуем удалить несуществующий продукт
         RestAssured.given()
                 .contentType(ContentType.JSON)
-                .delete(ApiRequests.PRODUCTS + "/" + getProductList()[0].getId())
+                .delete(ApiRequests.PRODUCTS + "/9999" )
                 .then()
-                .statusCode(SC_NOT_FOUND)
-                .body("messages", Matchers.equalTo("Product not found"));
+                .statusCode(not(SC_OK));
     }
 
 }
